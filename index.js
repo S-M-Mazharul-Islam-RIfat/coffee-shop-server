@@ -12,6 +12,8 @@ app.use(
    cors({
       origin: [
          "http://localhost:5173",
+         "https://coffee-shop-24cac.web.app",
+         "https://coffee-shop-24cac.firebaseapp.com"
       ]
    })
 );
@@ -48,7 +50,6 @@ async function run() {
          res.send({ token });
       })
 
-
       // middlewares
       const verifyToken = (req, res, next) => {
          if (!req.headers.authorization) {
@@ -82,13 +83,6 @@ async function run() {
          res.send(result);
       })
 
-      app.get('/allUsers/:email', async (req, res) => {
-         const email = req.params.email;
-         const query = { email: email };
-         const user = await allUserCollection.findOne(query);
-         res.send(user);
-      })
-
       app.get('/allUsers/admin/:email', async (req, res) => {
          const email = req.params.email;
          const query = { email: email };
@@ -100,6 +94,12 @@ async function run() {
          res.send({ admin });
       })
 
+      app.get('/allUsers/:email', async (req, res) => {
+         const email = req.params.email;
+         const query = { email: email };
+         const user = await allUserCollection.findOne(query);
+         res.send(user);
+      })
 
       app.post('/allUsers', async (req, res) => {
          const newUser = req.body;
@@ -226,6 +226,13 @@ async function run() {
             }
          }
          const result = await orderCollection.updateOne(filter, updateStatus);
+         res.send(result);
+      })
+
+      app.delete('/orders/:coffeeId', verifyToken, async (req, res) => {
+         const coffeeId = req.params.coffeeId;
+         const filter = { coffeeId: coffeeId };
+         const result = await orderCollection.deleteOne(filter);
          res.send(result);
       })
 
