@@ -50,6 +50,7 @@ async function run() {
          res.send({ token });
       })
 
+
       // middlewares
       const verifyToken = (req, res, next) => {
          if (!req.headers.authorization) {
